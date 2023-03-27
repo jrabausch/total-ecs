@@ -1,5 +1,5 @@
 import { IndexPool } from './IndexPool';
-import { EventEmitter } from 'event-emitter';
+import { EventEmitter } from '@jrabausch/event-emitter';
 export type Entity = number;
 export interface Component {
     [key: string]: any;

@@ -1,5 +1,5 @@
 import { IndexPool } from './IndexPool';
-import { EventEmitter } from 'event-emitter';
+import { EventEmitter } from '@jrabausch/event-emitter';
 import { ComponentEnterEvent, ComponentLeaveEvent } from './events';
 ;
 export class Manager extends EventEmitter {

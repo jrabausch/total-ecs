@@ -1,5 +1,5 @@
 import { IndexPool } from './IndexPool';
-import { EventEmitter } from 'event-emitter';
+import { EventEmitter } from '@jrabausch/event-emitter';
 import { ComponentEnterEvent, ComponentLeaveEvent } from './events';
 
 export type Entity = number;
@@ -20,7 +20,7 @@ export type Query<T extends ComponentClass<Component>[]> = (callback: QueryCallb
 
 type ComponentPool<T extends Component> = (T | undefined)[];
 
-export class Manager extends EventEmitter{
+export class Manager extends EventEmitter {
 
 	protected count: Entity = 0;
 
