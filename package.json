@@ -1,5 +1,5 @@
 {
-  "name": "total-ecs",
+  "name": "@jrabausch/total-ecs",
   "version": "1.0.0",
   "description": "An Entity Component System package for the browser and Node.",
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/jrabausch/total-ecs#readme",
   "dependencies": {
-    "event-emitter": "github:jrabausch/event-emitter"
+    "@jrabausch/event-emitter": "github:jrabausch/event-emitter"
   },
   "devDependencies": {
     "typescript": "^5.0.2"
