@@ -1,0 +1,28 @@
+{
+  "name": "total-ecs",
+  "version": "1.0.0",
+  "description": "An Entity Component System package for the browser and Node.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "test": "node --experimental-specifier-resolution=node ./test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrabausch/total-ecs.git"
+  },
+  "author": "Johannes Rabausch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jrabausch/total-ecs/issues"
+  },
+  "homepage": "https://github.com/jrabausch/total-ecs#readme",
+  "dependencies": {
+    "event-emitter": "github:jrabausch/event-emitter"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2"
+  }
+}
