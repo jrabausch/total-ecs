@@ -1,15 +1,14 @@
-import { ComponentEnterEvent, Manager } from '../dist';
+const { Manager, ComponentEnterEvent } = require('../dist');
 
-
-class PositionComponent{
+class PositionComponent {
 	x = 12;
 	y = 14;
 }
 
-const world =  new Manager();
+const world = new Manager();
 
 world.on(ComponentEnterEvent, (e) => {
-	if(e.component instanceof PositionComponent){
+	if (e.component instanceof PositionComponent) {
 		console.log(e.component.x);
 	}
 });

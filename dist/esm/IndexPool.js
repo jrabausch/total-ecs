@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.IndexPool = void 0;
-class IndexPool {
+export class IndexPool {
     constructor() {
         this.count = 0;
         this.pending = [];
@@ -19,4 +16,3 @@ class IndexPool {
         return this.count;
     }
 }
-exports.IndexPool = IndexPool;

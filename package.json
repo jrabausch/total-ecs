@@ -2,12 +2,14 @@
   "name": "@jrabausch/total-ecs",
   "version": "1.0.0",
   "description": "An Entity Component System package for the browser and Node.",
-  "type": "module",
   "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc --build",
-    "test": "node --experimental-specifier-resolution=node ./test/index.js"
+    "build:cjs": "tsc --declaration",
+    "build:mjs": "tsc --module es6 --outDir ./dist/esm",
+    "build": "npm run build:cjs & npm run build:mjs",
+    "test": "node ./test/index.js"
   },
   "repository": {
     "type": "git",

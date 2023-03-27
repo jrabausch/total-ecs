@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Manager = void 0;
-const IndexPool_1 = require("./IndexPool");
-const event_emitter_1 = require("@jrabausch/event-emitter");
-const events_1 = require("./events");
+import { IndexPool } from './IndexPool';
+import { EventEmitter } from '@jrabausch/event-emitter';
+import { ComponentEnterEvent, ComponentLeaveEvent } from './events';
 ;
-class Manager extends event_emitter_1.EventEmitter {
+export class Manager extends EventEmitter {
     constructor() {
         super(...arguments);
         this.count = 0;
-        this.indexPool = new IndexPool_1.IndexPool();
+        this.indexPool = new IndexPool();
         this.entities = {};
         this.indexes = {};
         this.components = {};
@@ -33,7 +30,7 @@ class Manager extends event_emitter_1.EventEmitter {
                 const component = this.components[type][index];
                 if (component !== undefined) {
                     this.components[type][index] = undefined;
-                    this.emit(new events_1.ComponentLeaveEvent(component, entity));
+                    this.emit(new ComponentLeaveEvent(component, entity));
                 }
             }
             delete this.entities[index];
@@ -70,10 +67,10 @@ class Manager extends event_emitter_1.EventEmitter {
             const currentComponent = componentPool[index];
             componentPool[index] = component;
             if (currentComponent !== undefined) {
-                this.emit(new events_1.ComponentLeaveEvent(currentComponent, entity));
+                this.emit(new ComponentLeaveEvent(currentComponent, entity));
             }
             // trigger component enter event
-            this.emit(new events_1.ComponentEnterEvent(component, entity));
+            this.emit(new ComponentEnterEvent(component, entity));
         }
     }
     removeComponent(entity, componentClass) {
@@ -88,7 +85,7 @@ class Manager extends event_emitter_1.EventEmitter {
         const component = componentPool[index];
         if (component !== undefined) {
             componentPool[index] = undefined;
-            this.emit(new events_1.ComponentLeaveEvent(component, entity));
+            this.emit(new ComponentLeaveEvent(component, entity));
             return component;
         }
         return component;
@@ -146,4 +143,3 @@ class Manager extends event_emitter_1.EventEmitter {
         return query;
     }
 }
-exports.Manager = Manager;
