@@ -28,11 +28,11 @@ export declare class Manager extends EventEmitter {
     createEntity<T extends Component[]>(...components: T): Entity;
     destroyEntity(entity: Entity): void;
     hasEntity(entity: Entity): boolean;
-    hasComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): boolean;
-    getComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined;
-    addComponents<T extends Component>(entity: Entity, ...components: T[]): void;
-    removeComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined;
+    entityHasComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): boolean;
+    entityGetComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined;
+    entityAddComponent<T extends Component>(entity: Entity, ...components: T[]): void;
+    entityRemoveComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined;
     protected buildQuery<T extends ComponentClass<Component>[]>(componentPools: ComponentPool<Component>[]): Query<T>;
-    createQuery<T extends ComponentClass<Component>[]>(...componentClasses: T): Query<T>;
+    createQuery<T extends ComponentClass<Component>>(componentClass: T, ...componentClasses: T[]): Query<T[]>;
 }
 export {};

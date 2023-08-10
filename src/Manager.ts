@@ -43,7 +43,7 @@ export class Manager extends EventEmitter {
     this.indexes[entity] = index;
 
     if (components.length) {
-      this.addComponents(entity, ...components);
+      this.entityAddComponent(entity, ...components);
     }
 
     return entity;
@@ -65,7 +65,6 @@ export class Manager extends EventEmitter {
           this.components[type][index] = undefined;
           this.emit(new ComponentLeaveEvent(component, entity));
         }
-
       }
 
       delete this.entities[index];
@@ -78,7 +77,7 @@ export class Manager extends EventEmitter {
     return this.indexes[entity] !== undefined;
   }
 
-  hasComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): boolean {
+  entityHasComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): boolean {
 
     const index = this.indexes[entity];
 
@@ -86,17 +85,12 @@ export class Manager extends EventEmitter {
       throw new ReferenceError(`Entity "${entity}" does not exist`);
     }
 
-    const componentClassName = componentClass.name;
-    const componentPool = this.components[componentClassName];
+    const componentPool = this.components[componentClass.name];
 
-    if (componentPool === undefined) {
-      throw new ReferenceError(`Component pool "${componentClassName}" does not exist`);
-    }
-
-    return componentPool[index] !== undefined;
+    return componentPool ? componentPool[index] !== undefined : false;
   }
 
-  getComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined {
+  entityGetComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined {
 
     const index = this.indexes[entity];
 
@@ -104,17 +98,12 @@ export class Manager extends EventEmitter {
       throw new ReferenceError(`Entity "${entity}" does not exist`);
     }
 
-    const componentClassName = componentClass.name;
-    const componentPool = this.components[componentClassName];
+    const componentPool = this.components[componentClass.name];
 
-    if (componentPool === undefined) {
-      throw new ReferenceError(`Component pool "${componentClassName}" does not exist`);
-    }
-
-    return componentPool[index] as T | undefined;
+    return componentPool ? componentPool[index] as T : undefined;
   }
 
-  addComponents<T extends Component>(entity: Entity, ...components: T[]): void {
+  entityAddComponent<T extends Component>(entity: Entity, ...components: T[]): void {
 
     const index = this.indexes[entity];
 
@@ -144,7 +133,7 @@ export class Manager extends EventEmitter {
     }
   }
 
-  removeComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined {
+  entityRemoveComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined {
 
     const index = this.indexes[entity];
 
@@ -154,20 +143,19 @@ export class Manager extends EventEmitter {
 
     const componentPool = this.components[componentClass.name];
 
-    if (componentPool === undefined) {
-      throw new ReferenceError(`Component pool "${componentClass.name}" does not exist`);
+    if (componentPool !== undefined) {
+
+      const component = componentPool[index];
+
+      if (component !== undefined) {
+
+        componentPool[index] = undefined;
+        this.emit(new ComponentLeaveEvent(component, entity));
+        return component as T;
+      }
     }
 
-    const component = componentPool[index];
-
-    if (component !== undefined) {
-
-      componentPool[index] = undefined;
-      this.emit(new ComponentLeaveEvent(component, entity));
-      return component as T;
-    }
-
-    return component;
+    return undefined;
   }
 
   protected buildQuery<T extends ComponentClass<Component>[]>(componentPools: ComponentPool<Component>[]): Query<T> {
@@ -207,18 +195,14 @@ export class Manager extends EventEmitter {
     return new Function('pools', 'entities', func)(componentPools, this.entities) as Query<T>;
   }
 
-  createQuery<T extends ComponentClass<Component>[]>(...componentClasses: T): Query<T> {
+  createQuery<T extends ComponentClass<Component>>(componentClass: T, ...componentClasses: T[]): Query<T[]> {
 
-    const componentClassNames = componentClasses.map(c => c.name);
+    const componentClassNames = [componentClass, ...componentClasses].map(c => c.name);
     const queryName = componentClassNames.join('-');
 
     let query = this.queries.get(queryName);
 
     if (query === undefined) {
-
-      if (!componentClasses.length) {
-        throw new Error('No arguments passed');
-      }
 
       const componentPools: ComponentPool<Component>[] = [];
 

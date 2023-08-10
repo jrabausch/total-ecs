@@ -17,7 +17,7 @@ export class Manager extends EventEmitter {
         this.entities[index] = entity;
         this.indexes[entity] = index;
         if (components.length) {
-            this.addComponents(entity, ...components);
+            this.entityAddComponent(entity, ...components);
         }
         return entity;
     }
@@ -39,31 +39,23 @@ export class Manager extends EventEmitter {
     hasEntity(entity) {
         return this.indexes[entity] !== undefined;
     }
-    hasComponent(entity, componentClass) {
+    entityHasComponent(entity, componentClass) {
         const index = this.indexes[entity];
         if (index === undefined) {
             throw new ReferenceError(`Entity "${entity}" does not exist`);
         }
-        const componentClassName = componentClass.name;
-        const componentPool = this.components[componentClassName];
-        if (componentPool === undefined) {
-            throw new ReferenceError(`Component pool "${componentClassName}" does not exist`);
-        }
-        return componentPool[index] !== undefined;
+        const componentPool = this.components[componentClass.name];
+        return componentPool ? componentPool[index] !== undefined : false;
     }
-    getComponent(entity, componentClass) {
+    entityGetComponent(entity, componentClass) {
         const index = this.indexes[entity];
         if (index === undefined) {
             throw new ReferenceError(`Entity "${entity}" does not exist`);
         }
-        const componentClassName = componentClass.name;
-        const componentPool = this.components[componentClassName];
-        if (componentPool === undefined) {
-            throw new ReferenceError(`Component pool "${componentClassName}" does not exist`);
-        }
-        return componentPool[index];
+        const componentPool = this.components[componentClass.name];
+        return componentPool ? componentPool[index] : undefined;
     }
-    addComponents(entity, ...components) {
+    entityAddComponent(entity, ...components) {
         const index = this.indexes[entity];
         if (index === undefined) {
             throw new ReferenceError(`Entity "${entity}" does not exist`);
@@ -84,22 +76,21 @@ export class Manager extends EventEmitter {
             this.emit(new ComponentEnterEvent(component, entity));
         }
     }
-    removeComponent(entity, componentClass) {
+    entityRemoveComponent(entity, componentClass) {
         const index = this.indexes[entity];
         if (index === undefined) {
             throw new ReferenceError(`Entity "${entity}" does not exist`);
         }
         const componentPool = this.components[componentClass.name];
-        if (componentPool === undefined) {
-            throw new ReferenceError(`Component pool "${componentClass.name}" does not exist`);
+        if (componentPool !== undefined) {
+            const component = componentPool[index];
+            if (component !== undefined) {
+                componentPool[index] = undefined;
+                this.emit(new ComponentLeaveEvent(component, entity));
+                return component;
+            }
         }
-        const component = componentPool[index];
-        if (component !== undefined) {
-            componentPool[index] = undefined;
-            this.emit(new ComponentLeaveEvent(component, entity));
-            return component;
-        }
-        return component;
+        return undefined;
     }
     buildQuery(componentPools) {
         const poolCount = componentPools.length;
@@ -131,14 +122,11 @@ export class Manager extends EventEmitter {
 			`;
         return new Function('pools', 'entities', func)(componentPools, this.entities);
     }
-    createQuery(...componentClasses) {
-        const componentClassNames = componentClasses.map(c => c.name);
+    createQuery(componentClass, ...componentClasses) {
+        const componentClassNames = [componentClass, ...componentClasses].map(c => c.name);
         const queryName = componentClassNames.join('-');
         let query = this.queries.get(queryName);
         if (query === undefined) {
-            if (!componentClasses.length) {
-                throw new Error('No arguments passed');
-            }
             const componentPools = [];
             for (let i = 0; i < componentClassNames.length; i++) {
                 const className = componentClassNames[i];
