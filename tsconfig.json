@@ -1,15 +1,16 @@
 {
-	"compilerOptions": {
-		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"noImplicitAny": true,
-		"lib": [
-			"DOM",
-			"ES6"
-		],
-		"outDir": "./dist",
-		"moduleResolution": "node",
-		"module": "CommonJS",
-		"target": "ES6"
-	}
+  "include": ["./src"],
+  "compilerOptions": {
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "lib": [
+      "DOM",
+      "ES6"
+    ],
+    "outDir": "./dist",
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "target": "ES6"
+  }
 }

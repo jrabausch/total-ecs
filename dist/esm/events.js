@@ -4,7 +4,6 @@ export class ComponentEvent {
         this.entity = entity;
     }
 }
-;
 export class ComponentEnterEvent extends ComponentEvent {
 }
 ;

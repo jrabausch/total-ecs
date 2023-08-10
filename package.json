@@ -9,7 +9,7 @@
     "build:cjs": "tsc --declaration",
     "build:mjs": "tsc --module es6 --outDir ./dist/esm",
     "build": "npm run build:cjs & npm run build:mjs",
-    "test": "node ./test/index.js"
+    "test": "jasmine --config=jasmine.json --parallel=2"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,9 @@
     "@jrabausch/event-emitter": "github:jrabausch/event-emitter"
   },
   "devDependencies": {
+    "@types/jasmine": "^4.3.5",
+    "jasmine": "^5.1.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
   }
 }

@@ -8,7 +8,6 @@ class ComponentEvent {
     }
 }
 exports.ComponentEvent = ComponentEvent;
-;
 class ComponentEnterEvent extends ComponentEvent {
 }
 exports.ComponentEnterEvent = ComponentEnterEvent;

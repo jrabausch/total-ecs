@@ -4,7 +4,6 @@ exports.Manager = void 0;
 const IndexPool_1 = require("./IndexPool");
 const event_emitter_1 = require("@jrabausch/event-emitter");
 const events_1 = require("./events");
-;
 class Manager extends event_emitter_1.EventEmitter {
     constructor() {
         super(...arguments);
@@ -42,6 +41,18 @@ class Manager extends event_emitter_1.EventEmitter {
     }
     hasEntity(entity) {
         return this.indexes[entity] !== undefined;
+    }
+    hasComponent(entity, componentClass) {
+        const index = this.indexes[entity];
+        if (index === undefined) {
+            throw new ReferenceError(`Entity "${entity}" does not exist`);
+        }
+        const componentClassName = componentClass.name;
+        const componentPool = this.components[componentClassName];
+        if (componentPool === undefined) {
+            throw new ReferenceError(`Component pool "${componentClassName}" does not exist`);
+        }
+        return componentPool[index] !== undefined;
     }
     getComponent(entity, componentClass) {
         const index = this.indexes[entity];

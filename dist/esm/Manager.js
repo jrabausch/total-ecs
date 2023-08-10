@@ -1,7 +1,6 @@
 import { IndexPool } from './IndexPool';
 import { EventEmitter } from '@jrabausch/event-emitter';
 import { ComponentEnterEvent, ComponentLeaveEvent } from './events';
-;
 export class Manager extends EventEmitter {
     constructor() {
         super(...arguments);
@@ -39,6 +38,18 @@ export class Manager extends EventEmitter {
     }
     hasEntity(entity) {
         return this.indexes[entity] !== undefined;
+    }
+    hasComponent(entity, componentClass) {
+        const index = this.indexes[entity];
+        if (index === undefined) {
+            throw new ReferenceError(`Entity "${entity}" does not exist`);
+        }
+        const componentClassName = componentClass.name;
+        const componentPool = this.components[componentClassName];
+        if (componentPool === undefined) {
+            throw new ReferenceError(`Component pool "${componentClassName}" does not exist`);
+        }
+        return componentPool[index] !== undefined;
     }
     getComponent(entity, componentClass) {
         const index = this.indexes[entity];
