@@ -38,21 +38,41 @@ describe('IndexPool', () => {
     expect(indexPool.get()).toBe(1);
   });
 
-  it('should provide size', () => {
-    expect(indexPool.size()).toBe(0);
+  it('should provide pool size', () => {
+    expect(indexPool.size).toBe(0);
 
     const i0 = indexPool.get();
     const i1 = indexPool.get();
 
-    expect(indexPool.size()).toBe(2);
+    expect(indexPool.size).toBe(2);
 
     indexPool.free(i0);
     indexPool.free(i1);
 
-    expect(indexPool.size()).toBe(2);
+    expect(indexPool.size).toBe(2);
 
-    expect(indexPool.get()).toBe(i1);
+    indexPool.get();
 
-    expect(indexPool.size()).toBe(2);
+    expect(indexPool.size).toBe(2);
+  });
+
+  it('should always return smallest index', () => {
+
+    const i0 = indexPool.get();
+    const i1 = indexPool.get();
+    const i2 = indexPool.get();
+
+    expect(i2).toBe(2);
+
+    indexPool.free(i2);
+
+    expect(indexPool.get()).toBe(i2);
+
+    indexPool.free(i0);
+    indexPool.free(i2);
+    indexPool.free(i1);
+
+    expect(indexPool.get()).toBe(0);
+    expect(indexPool.get()).toBe(1);
   });
 });

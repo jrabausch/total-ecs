@@ -3,5 +3,5 @@ export declare class IndexPool {
     protected pending: number[];
     get(): number;
     free(index: number): void;
-    size(): number;
+    get size(): number;
 }

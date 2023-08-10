@@ -12,9 +12,10 @@ export class IndexPool {
 
   free(index: number): void {
     this.pending.push(index);
+    this.pending.sort((a, b) => b - a);
   }
 
-  size(): number {
+  get size(): number {
     return this.count;
   }
 }

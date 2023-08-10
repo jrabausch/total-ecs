@@ -11,8 +11,9 @@ export class IndexPool {
     }
     free(index) {
         this.pending.push(index);
+        this.pending.sort((a, b) => b - a);
     }
-    size() {
+    get size() {
         return this.count;
     }
 }
