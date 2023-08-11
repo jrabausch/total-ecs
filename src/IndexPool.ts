@@ -1,7 +1,11 @@
 export class IndexPool {
-
   protected count: number = 0;
-  protected pending: number[] = [];
+  protected readonly pending: number[] = [];
+
+  constructor(
+    protected readonly sort: boolean = false
+  ) {
+  }
 
   get(): number {
     if (this.pending.length) {
@@ -12,7 +16,7 @@ export class IndexPool {
 
   free(index: number): void {
     this.pending.push(index);
-    this.pending.sort((a, b) => b - a);
+    this.sort && this.pending.sort((a, b) => b - a);
   }
 
   get size(): number {

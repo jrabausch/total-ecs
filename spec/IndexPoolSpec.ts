@@ -5,7 +5,7 @@ describe('IndexPool', () => {
   let indexPool: IndexPool;
 
   beforeEach(() => {
-    indexPool = new IndexPool();
+    indexPool = new IndexPool(true);
   });
 
   it('should be self', () => {

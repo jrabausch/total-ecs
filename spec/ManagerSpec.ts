@@ -1,4 +1,4 @@
-import { ComponentEnterEvent, ComponentLeaveEvent, Manager } from '../src';
+import { ComponentEnterEvent, ComponentLeaveEvent, EntityManager } from '../src';
 
 class PositionComponent {
   x: number = 10;
@@ -11,14 +11,14 @@ class TagComponent {
 
 describe('Manager', () => {
 
-  let world: Manager;
+  let world: EntityManager;
 
   beforeEach(() => {
-    world = new Manager();
+    world = new EntityManager();
   });
 
   it('should be self', () => {
-    expect(world).toBeInstanceOf(Manager);
+    expect(world).toBeInstanceOf(EntityManager);
   });
 
   it('should create entities', () => {
@@ -39,8 +39,8 @@ describe('Manager', () => {
     );
 
     expect(world.hasEntity(entity1)).toBeTrue();
-    expect(world.entityHasComponent(entity1, PositionComponent)).toBeTrue();
-    expect(world.entityHasComponent(entity1, TagComponent)).toBeTrue();
+    expect(world.hasComponent(entity1, PositionComponent)).toBeTrue();
+    expect(world.hasComponent(entity1, TagComponent)).toBeTrue();
   });
 
   it('should create entities with components and emit', () => {
@@ -97,9 +97,9 @@ describe('Manager', () => {
     const posComponent = new PositionComponent();
     const entity1 = world.createEntity();
 
-    expect(world.entityHasComponent(entity1, PositionComponent)).toBeFalse();
-    world.entityAddComponent(entity1, posComponent);
-    expect(world.entityHasComponent(entity1, PositionComponent)).toBeTrue();
+    expect(world.hasComponent(entity1, PositionComponent)).toBeFalse();
+    world.addComponent(entity1, posComponent);
+    expect(world.hasComponent(entity1, PositionComponent)).toBeTrue();
     expect(world.emit).toHaveBeenCalledOnceWith(new ComponentEnterEvent(posComponent, entity1));
   });
 
@@ -110,9 +110,49 @@ describe('Manager', () => {
 
     spyOn(world, 'emit');
 
-    expect(world.entityHasComponent(entity1, PositionComponent)).toBeTrue();
-    world.entityRemoveComponent(entity1, PositionComponent);
-    expect(world.entityHasComponent(entity1, PositionComponent)).toBeFalse();
+    expect(world.hasComponent(entity1, PositionComponent)).toBeTrue();
+    expect(world.removeComponent(entity1, PositionComponent)).toBe(posComponent);
+    expect(world.removeComponent(entity1, PositionComponent)).toBeUndefined();
+    expect(world.hasComponent(entity1, PositionComponent)).toBeFalse();
     expect(world.emit).toHaveBeenCalledOnceWith(new ComponentLeaveEvent(posComponent, entity1));
+  });
+
+  it('should get components', () => {
+
+    const posComponent = new PositionComponent();
+    const entity1 = world.createEntity(posComponent);
+
+    expect(world.hasComponent(entity1, PositionComponent)).toBeTrue();
+    expect(world.getComponent(entity1, PositionComponent)).toBe(posComponent);
+    world.removeComponent(entity1, PositionComponent);
+    expect(world.getComponent(entity1, PositionComponent)).toBeUndefined();
+  });
+
+  it('should query entities', () => {
+
+    const system = {
+      update: (entity: any, pos: any, tag: any) => { }
+    };
+
+    spyOn(system, 'update');
+
+    const query = world.createQuery(PositionComponent, TagComponent);
+    const entity1 = world.createEntity(new TagComponent(), new PositionComponent());
+
+    query.run(system.update);
+
+    expect(system.update).toHaveBeenCalledTimes(1);
+
+    const entity2 = world.createEntity(new TagComponent(), new PositionComponent());
+    query.run(system.update);
+
+    expect(system.update).toHaveBeenCalledTimes(3);
+
+    world.destroyEntity(entity1);
+    world.destroyEntity(entity2);
+
+    query.run(system.update);
+
+    expect(system.update).toHaveBeenCalledTimes(3);
   });
 });

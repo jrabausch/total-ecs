@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.IndexPool = void 0;
 class IndexPool {
-    constructor() {
+    constructor(sort = false) {
+        this.sort = sort;
         this.count = 0;
         this.pending = [];
     }
@@ -14,7 +15,7 @@ class IndexPool {
     }
     free(index) {
         this.pending.push(index);
-        this.pending.sort((a, b) => b - a);
+        this.sort && this.pending.sort((a, b) => b - a);
     }
     get size() {
         return this.count;

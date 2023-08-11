@@ -1,4 +1,4 @@
-import { Component, Entity } from './Manager';
+import { Component, Entity } from './interfaces';
 export declare abstract class ComponentEvent<T extends Component> {
     readonly component: T;
     readonly entity: Entity;
