@@ -63,7 +63,8 @@ export class EntityManager extends EventEmitter {
         if (index === undefined) {
             throw new ReferenceError(`Entity "${entity}" does not exist`);
         }
-        components.forEach(component => {
+        for (let i = 0; i < components.length; i++) {
+            const component = components[i];
             const componentClassName = component.constructor.name;
             let componentPool = this.components[componentClassName];
             if (componentPool === undefined) {
@@ -77,7 +78,7 @@ export class EntityManager extends EventEmitter {
                 }
                 this.emit(new ComponentEnterEvent(component, entity));
             }
-        });
+        }
     }
     removeComponent(entity, componentClass) {
         const index = this.indexes[entity];

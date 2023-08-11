@@ -3,8 +3,7 @@ export class EntityQuery {
         const variables = [];
         let pools = '';
         let conditions = '';
-        const poolCount = componentPools.length;
-        for (let i = 0; i < poolCount; i++) {
+        for (let i = 0; i < componentPools.length; i++) {
             pools += `var pool${i} = pools[${i}];\n`;
             const component = `component${i}`;
             conditions += `var ${component} = pool${i}[index];\n`;
@@ -12,12 +11,11 @@ export class EntityQuery {
             variables.push(component);
         }
         const func = `
-        "use strict";
 				${pools}
 				return function(callback){
 					var length = pool0.length;
-					var result;
-					for(var index = 0; index < length; index++){
+          var index, result;
+					for(index = 0; index < length; index++){
 						${conditions}
 						if((result = callback(entities[index], ${variables.join(',')})) !== undefined){
 							return result;
