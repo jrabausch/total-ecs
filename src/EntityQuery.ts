@@ -10,8 +10,7 @@ export class EntityQuery<T extends ComponentClass<Component>[]> {
     let pools = '';
     let conditions = '';
 
-    const poolCount = componentPools.length;
-    for (let i = 0; i < poolCount; i++) {
+    for (let i = 0; i < componentPools.length; i++) {
       pools += `var pool${i} = pools[${i}];\n`;
 
       const component = `component${i}`;
@@ -21,12 +20,11 @@ export class EntityQuery<T extends ComponentClass<Component>[]> {
     }
 
     const func = `
-        "use strict";
 				${pools}
 				return function(callback){
 					var length = pool0.length;
-					var result;
-					for(var index = 0; index < length; index++){
+          var index, result;
+					for(index = 0; index < length; index++){
 						${conditions}
 						if((result = callback(entities[index], ${variables.join(',')})) !== undefined){
 							return result;
