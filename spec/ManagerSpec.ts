@@ -1,4 +1,4 @@
-import { ComponentEnterEvent, ComponentLeaveEvent, EntityManager } from '../src';
+import { ComponentEnterEvent, ComponentLeaveEvent, Entity, EntityManager } from '../src';
 
 class PositionComponent {
   x: number = 10;
@@ -154,5 +154,39 @@ describe('Manager', () => {
     query.run(system.update);
 
     expect(system.update).toHaveBeenCalledTimes(3);
+  });
+
+  it('should return from query', () => {
+
+    const cbs = {
+      cb1(_e: Entity, tag: TagComponent) {
+        return tag;
+      },
+      cb2(_e: Entity, _tag: TagComponent) {
+        return;
+      }
+    };
+
+    spyOn(cbs, 'cb1').and.callThrough();
+    spyOn(cbs, 'cb2').and.callThrough();
+
+    const query = world.createQuery(TagComponent);
+    const result1 = query.run(cbs.cb1);
+
+    expect(result1).toBeUndefined();
+    expect(cbs.cb1).toHaveBeenCalledTimes(0);
+
+    world.createEntity(new TagComponent());
+    world.createEntity(new TagComponent());
+
+    const result2 = query.run(cbs.cb2);
+
+    expect(result2).toBeUndefined();
+    expect(cbs.cb2).toHaveBeenCalledTimes(2);
+
+    const result3 = query.run(cbs.cb1);
+
+    expect(result3).toBeInstanceOf(TagComponent);
+    expect(cbs.cb1).toHaveBeenCalledTimes(1);
   });
 });

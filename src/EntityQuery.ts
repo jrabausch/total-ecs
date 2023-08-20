@@ -26,7 +26,8 @@ export class EntityQuery<T extends ComponentClass<Component>[]> {
           var index, result;
 					for(index = 0; index < length; index++){
 						${conditions}
-						if((result = callback(entities[index], ${variables.join(',')})) !== undefined){
+            result = callback(entities[index], ${variables.join(',')});
+						if(result !== undefined){
 							return result;
 						}
 					}
@@ -36,7 +37,7 @@ export class EntityQuery<T extends ComponentClass<Component>[]> {
     this.execute = new Function('pools', 'entities', func)(componentPools, entityMap);
   }
 
-  run<C extends QueryCallback<T>>(callback: C): ReturnType<C> {
+  run<C extends QueryCallback<T>>(callback: C): ReturnType<C> | void {
     return this.execute(callback);
   }
 }
