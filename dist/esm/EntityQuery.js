@@ -17,7 +17,8 @@ export class EntityQuery {
           var index, result;
 					for(index = 0; index < length; index++){
 						${conditions}
-						if((result = callback(entities[index], ${variables.join(',')})) !== undefined){
+            result = callback(entities[index], ${variables.join(',')});
+						if(result !== undefined){
 							return result;
 						}
 					}

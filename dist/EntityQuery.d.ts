@@ -4,5 +4,5 @@ export declare class EntityQuery<T extends ComponentClass<Component>[]> {
     constructor(componentPools: ComponentPool<Component>[], entityMap: {
         [index: number]: Entity;
     });
-    run<C extends QueryCallback<T>>(callback: C): ReturnType<C>;
+    run<C extends QueryCallback<T>>(callback: C): ReturnType<C> | void;
 }
