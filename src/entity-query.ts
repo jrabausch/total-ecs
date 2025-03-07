@@ -1,11 +1,9 @@
-import { Component, ComponentClass, ComponentPool, Entity, QueryCallback } from './interfaces';
+import type { Component, ComponentClass, ComponentPool, Entity, QueryCallback } from './interfaces';
 
 export class EntityQuery<T extends ComponentClass<Component>[]> {
-
-  protected readonly execute: Function;
+  protected readonly execute: (cb: QueryCallback<T>) => any;
 
   constructor(componentPools: ComponentPool<Component>[], entityMap: { [index: number]: Entity }) {
-
     const variables: string[] = [];
     let pools = '';
     let conditions = '';
@@ -20,20 +18,21 @@ export class EntityQuery<T extends ComponentClass<Component>[]> {
     }
 
     const func = `
-				${pools}
-				return function(callback){
-					var length = pool0.length;
-          var index, result;
-					for(index = 0; index < length; index++){
-						${conditions}
-            result = callback(entities[index], ${variables.join(',')});
-						if(result !== undefined){
-							return result;
-						}
-					}
-				}
-			`;
+      ${pools}
+      return function(callback){
+        var length = pool0.length;
+        var index, result;
+        for(index = 0; index < length; index++){
+          ${conditions}
+          result = callback(entities[index], ${variables.join(',')});
+          if(result !== undefined){
+            return result;
+          }
+        }
+      }
+    `;
 
+    // eslint-disable-next-line no-new-func
     this.execute = new Function('pools', 'entities', func)(componentPools, entityMap);
   }
 

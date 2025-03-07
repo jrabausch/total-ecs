@@ -1,4 +1,5 @@
-import { ComponentEnterEvent, ComponentLeaveEvent, Entity, EntityManager } from '../src';
+import type { Entity } from '../src';
+import { ComponentEnterEvent, ComponentLeaveEvent, EntityManager } from '../src';
 
 class PositionComponent {
   x: number = 10;
@@ -9,8 +10,7 @@ class TagComponent {
   name: string = 'tag';
 }
 
-describe('Manager', () => {
-
+describe('entityManager', () => {
   let world: EntityManager;
 
   beforeEach(() => {
@@ -22,7 +22,6 @@ describe('Manager', () => {
   });
 
   it('should create entities', () => {
-
     const entity1 = world.createEntity();
     expect(entity1).toBeInstanceOf(Number);
 
@@ -32,10 +31,9 @@ describe('Manager', () => {
   });
 
   it('should create entities with components', () => {
-
     const entity1 = world.createEntity(
       new PositionComponent(),
-      new TagComponent()
+      new TagComponent(),
     );
 
     expect(world.hasEntity(entity1)).toBeTrue();
@@ -44,7 +42,6 @@ describe('Manager', () => {
   });
 
   it('should create entities with components and emit', () => {
-
     spyOn(world, 'emit');
 
     const posComponent = new PositionComponent();
@@ -52,7 +49,7 @@ describe('Manager', () => {
 
     const entity1 = world.createEntity(
       posComponent,
-      tagComponent
+      tagComponent,
     );
 
     expect(world.emit).toHaveBeenCalledTimes(2);
@@ -61,7 +58,6 @@ describe('Manager', () => {
   });
 
   it('should destroy entities', () => {
-
     const entity1 = world.createEntity();
     expect(world.hasEntity(entity1)).toBeTrue();
 
@@ -71,13 +67,12 @@ describe('Manager', () => {
   });
 
   it('should destroy entities and emit', () => {
-
     const posComponent = new PositionComponent();
     const tagComponent = new TagComponent();
 
     const entity1 = world.createEntity(
       posComponent,
-      tagComponent
+      tagComponent,
     );
 
     spyOn(world, 'emit');
@@ -91,7 +86,6 @@ describe('Manager', () => {
   });
 
   it('should add components and emit', () => {
-
     spyOn(world, 'emit');
 
     const posComponent = new PositionComponent();
@@ -104,7 +98,6 @@ describe('Manager', () => {
   });
 
   it('should remove components and emit', () => {
-
     const posComponent = new PositionComponent();
     const entity1 = world.createEntity(posComponent);
 
@@ -118,7 +111,6 @@ describe('Manager', () => {
   });
 
   it('should get components', () => {
-
     const posComponent = new PositionComponent();
     const entity1 = world.createEntity(posComponent);
 
@@ -129,9 +121,8 @@ describe('Manager', () => {
   });
 
   it('should query entities', () => {
-
     const system = {
-      update: (entity: any, pos: any, tag: any) => { }
+      update: (_entity: any, _pos: any, _tag: any) => { },
     };
 
     spyOn(system, 'update');
@@ -157,14 +148,13 @@ describe('Manager', () => {
   });
 
   it('should return from query', () => {
-
     const cbs = {
       cb1(_e: Entity, tag: TagComponent) {
         return tag;
       },
       cb2(_e: Entity, _tag: TagComponent) {
-        return;
-      }
+
+      },
     };
 
     spyOn(cbs, 'cb1').and.callThrough();

@@ -3,7 +3,7 @@ export class IndexPool {
   protected readonly pending: number[] = [];
 
   constructor(
-    protected readonly sort: boolean = false
+    protected readonly sort: boolean = false,
   ) {
   }
 

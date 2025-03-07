@@ -1,36 +1,5 @@
-"use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// src/index.ts
-var index_exports = {};
-__export(index_exports, {
-  ComponentEnterEvent: () => ComponentEnterEvent,
-  ComponentEvent: () => ComponentEvent,
-  ComponentLeaveEvent: () => ComponentLeaveEvent,
-  EntityManager: () => EntityManager,
-  EntityQuery: () => EntityQuery,
-  IndexPool: () => IndexPool
-});
-module.exports = __toCommonJS(index_exports);
-
 // src/entity-manager.ts
-var import_event_emitter = require("@jrabausch/event-emitter");
+import { EventEmitter } from "@jrabausch/event-emitter";
 
 // src/entity-query.ts
 var EntityQuery = class {
@@ -104,7 +73,7 @@ var IndexPool = class {
 };
 
 // src/entity-manager.ts
-var EntityManager = class extends import_event_emitter.EventEmitter {
+var EntityManager = class extends EventEmitter {
   constructor(emitEvents = true, sortIndexes = false) {
     super();
     this.emitEvents = emitEvents;
@@ -218,13 +187,12 @@ var EntityManager = class extends import_event_emitter.EventEmitter {
     return query;
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
+export {
   ComponentEnterEvent,
   ComponentEvent,
   ComponentLeaveEvent,
   EntityManager,
   EntityQuery,
   IndexPool
-});
-//# sourceMappingURL=index.js.map
+};
+//# sourceMappingURL=index.mjs.map

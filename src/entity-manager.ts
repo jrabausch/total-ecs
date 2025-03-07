@@ -1,8 +1,8 @@
+import type { Component, ComponentClass, ComponentPool, Entity } from './interfaces';
 import { EventEmitter } from '@jrabausch/event-emitter';
+import { EntityQuery } from './entity-query';
 import { ComponentEnterEvent, ComponentLeaveEvent } from './events';
-import { Component, ComponentClass, ComponentPool, Entity } from './interfaces';
-import { IndexPool } from './IndexPool';
-import { EntityQuery } from './EntityQuery';
+import { IndexPool } from './index-pool';
 
 export class EntityManager extends EventEmitter {
   protected count: Entity = 0;
@@ -14,14 +14,13 @@ export class EntityManager extends EventEmitter {
 
   constructor(
     protected readonly emitEvents: boolean = true,
-    sortIndexes: boolean = false
+    sortIndexes: boolean = false,
   ) {
     super();
     this.indexPool = new IndexPool(sortIndexes);
   }
 
   createEntity(...components: Component[]): Entity {
-
     const entity: Entity = ++this.count;
     const index = this.indexPool.get();
 
@@ -36,7 +35,6 @@ export class EntityManager extends EventEmitter {
   }
 
   destroyEntity(entity: Entity): void {
-
     const index = this.indexes[entity];
 
     if (index === undefined) {
@@ -46,7 +44,6 @@ export class EntityManager extends EventEmitter {
     delete this.indexes[entity];
 
     for (const type in this.components) {
-
       const component = this.components[type][index];
 
       if (component !== undefined) {
@@ -65,7 +62,6 @@ export class EntityManager extends EventEmitter {
   }
 
   hasComponent(entity: Entity, componentClass: ComponentClass<Component>): boolean {
-
     const index = this.indexes[entity];
 
     if (index === undefined) {
@@ -78,7 +74,6 @@ export class EntityManager extends EventEmitter {
   }
 
   getComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined {
-
     const index = this.indexes[entity];
 
     if (index === undefined) {
@@ -91,7 +86,6 @@ export class EntityManager extends EventEmitter {
   }
 
   addComponent(entity: Entity, ...components: Component[]): void {
-
     const index = this.indexes[entity];
 
     if (index === undefined) {
@@ -99,7 +93,6 @@ export class EntityManager extends EventEmitter {
     }
 
     for (let i = 0; i < components.length; i++) {
-
       const component = components[i];
       const componentClassName = component.constructor.name;
       let componentPool = this.components[componentClassName];
@@ -122,7 +115,6 @@ export class EntityManager extends EventEmitter {
   }
 
   removeComponent<T extends Component>(entity: Entity, componentClass: ComponentClass<T>): T | undefined {
-
     const index = this.indexes[entity];
 
     if (index === undefined) {
@@ -147,9 +139,9 @@ export class EntityManager extends EventEmitter {
   }
 
   createQuery<T extends ComponentClass<Component>, A extends T, B extends T[]>(
-    componentClass: A, ...componentClasses: B
+    componentClass: A,
+    ...componentClasses: B
   ): EntityQuery<[A, ...B]> {
-
     const componentClassNames = [componentClass, ...componentClasses].map(c => c.name);
     const queryName = componentClassNames.join('-');
 
@@ -159,7 +151,7 @@ export class EntityManager extends EventEmitter {
       return query;
     }
 
-    const componentPools = componentClassNames.map(className => {
+    const componentPools = componentClassNames.map((className) => {
       let componentPool = this.components[className];
 
       if (componentPool === undefined) {

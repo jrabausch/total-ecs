@@ -1,7 +1,6 @@
 import { IndexPool } from '../src';
 
-describe('IndexPool', () => {
-
+describe('indexPool', () => {
   let indexPool: IndexPool;
 
   beforeEach(() => {
@@ -57,7 +56,6 @@ describe('IndexPool', () => {
   });
 
   it('should always return smallest index', () => {
-
     const i0 = indexPool.get();
     const i1 = indexPool.get();
     const i2 = indexPool.get();
