@@ -1,16 +1,18 @@
 {
-  "include": ["./src"],
+  "include": [
+    "./src",
+    "./spec"
+  ],
   "compilerOptions": {
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "lib": [
-      "DOM",
       "ES6"
     ],
     "outDir": "./dist",
-    "moduleResolution": "node",
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "ES6"
   }
 }

@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "An Entity Component System package for the browser and Node.",
   "main": "./dist/index.js",
-  "module": "./dist/esm/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build:cjs": "tsc --declaration",
-    "build:mjs": "tsc --module es6 --outDir ./dist/esm",
-    "build": "npm run build:cjs & npm run build:mjs",
-    "test": "jasmine --config=jasmine.json --parallel=2"
+    "check": "tsc --noEmit",
+    "lint": "eslint",
+    "build": "tsup",
+    "test": "jasmine --config=jasmine.json"
   },
   "repository": {
     "type": "git",
@@ -25,9 +25,12 @@
     "@jrabausch/event-emitter": "github:jrabausch/event-emitter"
   },
   "devDependencies": {
-    "@types/jasmine": "^4.3.5",
-    "jasmine": "^5.1.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.2"
+    "@antfu/eslint-config": "^4.8.1",
+    "@types/jasmine": "^5.1.7",
+    "esbuild-register": "^3.6.0",
+    "eslint": "^9.22.0",
+    "jasmine": "^5.6.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
   }
 }

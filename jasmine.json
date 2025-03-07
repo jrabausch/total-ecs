@@ -1,10 +1,10 @@
 {
   "spec_dir": "./spec",
   "spec_files": [
-    "**/*[sS]pec.ts"
+    "**/*.spec.ts"
   ],
   "helpers": [
-    "../node_modules/ts-node/register/type-check.js"
+    "../node_modules/esbuild-register/register.js"
   ],
   "env": {
     "stopSpecOnExpectationFailure": false,
